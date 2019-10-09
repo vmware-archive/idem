@@ -93,7 +93,20 @@ async def run(hub, name, low, seq_comp, running, run_num):
             'result': False,
             '__run_num': run_num}
         return
-    s_ref = f"states.{chunk['state']}.{chunk['fun']}"
+    if '.' in chunk['state']:
+        root_sub = chunk['state'].split('.')[0]
+        if not root_sub in hub.idem.RUNS[name]['subs']:
+            ret = {
+                'name': chunk['name'],
+                'comment': f'State not available: chunk["state"]',
+                'changes': {},
+                'result': False}
+            ret['__run_num'] = run_num
+            running[tag] = ret
+            return
+        s_ref = f"{chunk['state']}.{chunk['fun']}"
+    else:
+        s_ref = f"states.{chunk['state']}.{chunk['fun']}"
     func = getattr(hub, s_ref)
     call = hub.idem.tools.format_call(func, chunk, expected_extra_kws=STATE_INTERNAL_KEYWORDS)
     for rdat in rdats:

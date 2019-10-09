@@ -23,7 +23,7 @@ async def gather(hub, name, *sls):
         if not cfn:
             hub.idem.RUNS[name]['errors'].append('SLS ref {sls_ref} did not resolve to a file')
             continue
-        state = await hub.render.init.render(opts.get('render', 'yaml'), cfn, sls_ref)
+        state = hub.rend.init.parse(cfn, opts.get('render', 'yaml'))
         if not isinstance(state, dict):
             hub.idem.RUNS['errors'].append('SLS {sls_ref} is not formed as a dict')
         if 'include' in state:
@@ -123,14 +123,15 @@ def decls(hub, name, state, sls_ref):
                 #         - mode: 644
                 #       file.comment:
                 #           - regex: ^requirepass
-                if comps[0] in skeys:
+                ref = '.'.join(comps[:-1])
+                if ref in skeys:
                     hub.idem.RUNS[name]['errors'].append(
                         f'ID "{id_}" in SLS "{sls_ref}" contains multiple state declarations of the same type'
                     )
                     continue
-                state[id_][comps[0]] = state[id_].pop(key)
-                state[id_][comps[0]].append(comps[1])
-                skeys.add(comps[0])
+                state[id_][ref] = state[id_].pop(key)
+                state[id_][ref].append(comps[-1])
+                skeys.add(ref)
                 continue
             skeys.add(key)
         if '__sls__' not in state[id_]:

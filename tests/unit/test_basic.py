@@ -14,6 +14,9 @@ def run_sls(sls):
     name = 'test'
     hub = pop.hub.Hub()
     hub.pop.sub.add('idem.idem', init=True)
+    hub.pop.sub.add('nest')
+    hub.pop.sub.load_subdirs(hub.nest)
+    hub.pop.sub.load_subdirs(hub.nest.again)
     opts = {}
     for key, value in idem.conf.CLI_CONFIG.items():
         opts[key] = value['default']
@@ -21,10 +24,19 @@ def run_sls(sls):
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
     opts['sls_sources'] = [f'file://{sls_dir}']
     opts['sls'] = sls
-    hub.idem.init.create(name, opts)
-    hub.pop.loop.start(hub.idem.init.apply(name, opts, *opts['sls']))
+    hub.idem.init.create(name, opts, ['nest'])
+    hub.pop.loop.start(hub.idem.init.apply(name, opts, ['nest'], *opts['sls']))
     ret = hub.idem.RUNS[name]['running']
     return ret
+
+
+def test_nest():
+    ret = run_sls(['nest'])
+    assert ret['nest.again.another.test_|-baz_|-baz_|-nop']['result']
+    assert ret['nest.again.test_|-bar_|-bar_|-nop']['result']
+    assert ret['nest.test_|-foo_|-foo_|-nop']['result']
+    # verify that the invalid state is not run
+    assert not ret['idem.init_|-quo_|-quo_|-create']['result']
 
 
 def test_basic():

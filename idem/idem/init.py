@@ -17,8 +17,8 @@ def __init__(hub):
     hub.pop.sub.load_subdirs(hub.idem)
     hub.idem.RUNS = {}
     hub.pop.sub.add('idem.sls')
-    hub.pop.sub.add('idem.render')
     hub.pop.sub.add('idem.states')
+    hub.pop.sub.add('rend.rend')
     hub.idem.init.req_map()
 
 
@@ -48,16 +48,21 @@ def cli(hub):
     pprint.pprint(hub.idem.RUNS['cli']['running'])
 
 
-def create(hub, name, opts):
+def create(hub, name, opts, subs):
+    '''
+    Create a new instance to execute against
+    '''
     hub.idem.RUNS[name] = {'opts': opts}
     hub.idem.RUNS[name]['states'] = {}
+    # The names of the subs permitted to be executed on the hub
+    hub.idem.RUNS[name]['subs'] = subs
 
 
-async def apply(hub, name, opts, *sls):
+async def apply(hub, name, opts, subs, *sls):
     '''
     Run idem!
     '''
-    hub.idem.init.create(name, opts)
+    hub.idem.init.create(name, opts, subs)
     # Get the sls file
     # render it
     # compile high data to "new" low data (bypass keyword issues)
