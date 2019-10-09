@@ -18,7 +18,7 @@ def __init__(hub):
     hub.idem.RUNS = {}
     hub.pop.sub.add('idem.sls')
     hub.pop.sub.add('idem.states')
-    hub.pop.sub.add('rend.rend')
+    hub.pop.sub.add(dyne_name='rend')
     hub.idem.init.req_map()
 
 
