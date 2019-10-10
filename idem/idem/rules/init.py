@@ -1,6 +1,9 @@
 # Import python libs
 import asyncio
 
+# import local libs
+import pop.loader
+
 
 # These are keywords passed to state module functions which are to be used
 # by salt in this state module and not on the actual state module function
@@ -68,6 +71,26 @@ STATE_RUNTIME_KEYWORDS = frozenset([
 STATE_INTERNAL_KEYWORDS = STATE_REQUISITE_KEYWORDS.union(STATE_REQUISITE_IN_KEYWORDS).union(STATE_RUNTIME_KEYWORDS)
 
 
+def get_func(hub, name, chunk):
+    '''
+    Given the runtime name and the chunk in question, determine what function
+    on the hub that can be run
+    '''
+    s_ref = chunk['state']
+    for sub in hub.idem.RUNS[name]['subs']:
+        test = f'{sub}.{s_ref}.{chunk["fun"]}'
+        try:
+            func = getattr(hub, test)
+        except AttributeError:
+            continue
+        if isinstance(func, pop.loader.LoadedMod):
+            continue
+        if func is None:
+            continue
+        return func
+    return None
+
+
 async def run(hub, name, low, seq_comp, running, run_num):
     '''
     All requisites have been met for this low chunk.
@@ -93,21 +116,15 @@ async def run(hub, name, low, seq_comp, running, run_num):
             'result': False,
             '__run_num': run_num}
         return
-    if '.' in chunk['state']:
-        root_sub = chunk['state'].split('.')[0]
-        if not root_sub in hub.idem.RUNS[name]['subs']:
-            ret = {
-                'name': chunk['name'],
-                'comment': f'State not available: chunk["state"]',
-                'changes': {},
-                'result': False}
-            ret['__run_num'] = run_num
-            running[tag] = ret
-            return
-        s_ref = f"{chunk['state']}.{chunk['fun']}"
-    else:
-        s_ref = f"states.{chunk['state']}.{chunk['fun']}"
-    func = getattr(hub, s_ref)
+    func = hub.idem.rules.init.get_func(name, chunk)
+    if func is None:
+        running[tag] = {
+            'name': chunk['name'],
+            'changes': {},
+            'comment': f'The named state {chunk["state"]} is not available',
+            'result': False,
+            '__run_num': run_num}
+        return
     call = hub.idem.tools.format_call(func, chunk, expected_extra_kws=STATE_INTERNAL_KEYWORDS)
     for rdat in rdats:
         if 'pre' in rdat:

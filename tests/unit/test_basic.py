@@ -1,9 +1,9 @@
 # Import python libs
 import os
+import tempfile
 
 # Import rosso libs
 import pop.hub
-import tempfile
 import idem.conf
 
 
@@ -16,7 +16,8 @@ def run_sls(sls):
     hub.pop.sub.add('idem.idem', init=True)
     hub.pop.sub.add('nest')
     hub.pop.sub.load_subdirs(hub.nest)
-    hub.pop.sub.load_subdirs(hub.nest.again)
+    hub.pop.sub.load_subdirs(hub.nest.nest)
+    hub.pop.sub.load_subdirs(hub.nest.nest.again)
     opts = {}
     for key, value in idem.conf.CLI_CONFIG.items():
         opts[key] = value['default']
@@ -25,7 +26,7 @@ def run_sls(sls):
     opts['sls_sources'] = [f'file://{sls_dir}']
     opts['sls'] = sls
     hub.idem.init.create(name, opts, ['nest'])
-    hub.pop.loop.start(hub.idem.init.apply(name, opts, ['nest'], *opts['sls']))
+    hub.pop.loop.start(hub.idem.init.apply(name, opts, ['states', 'nest'], *opts['sls']))
     ret = hub.idem.RUNS[name]['running']
     return ret
 
