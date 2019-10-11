@@ -9,13 +9,12 @@ async def ref(hub, name, sls):
     '''
     Cache the given file from the named reference point
     '''
-    opts = hub.idem.RUNS[name]['opts']
-    for source in opts.get('sls_sources', ['file://']):
+    for source in hub.idem.RUNS[name]['sls_sources']:
         proto = source[:source.index(':')]
         path = sls.replace('.', '/')
         locs = [f'{path}.sls', f'{path}/init.sls']
         for loc in locs:
             full = os.path.join(source, loc)
-            cfn = await hub.pop.ref.last(f'sls.{proto}.cache')(opts['cache_dir'], full)
+            cfn = await hub.pop.ref.last(f'sls.{proto}.cache')(hub.idem.RUNS[name]['cache_dir'], full)
             if cfn:
                 return cfn

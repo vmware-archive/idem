@@ -5,7 +5,7 @@ async def start(hub, name):
     '''
     if not hub.idem.RUNS[name].get('low'):
         raise ValueError()
-    rtime = hub.idem.RUNS[name]['opts']['runtime']
+    rtime = hub.idem.RUNS[name]['runtime']
     hub.idem.RUNS[name]['running'] = {}
     low = hub.idem.RUNS[name].get('low')
     ref = f'idem.run.{rtime}.runtime'

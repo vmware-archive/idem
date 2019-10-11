@@ -18,15 +18,12 @@ def run_sls(sls):
     hub.pop.sub.load_subdirs(hub.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest.again)
-    opts = {}
-    for key, value in idem.conf.CLI_CONFIG.items():
-        opts[key] = value['default']
-    opts['cache_dir'] = tempfile.mkdtemp()
+    runtime = 'parallel'
+    render = 'yaml'
+    cache_dir = tempfile.mkdtemp()
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
-    opts['sls_sources'] = [f'file://{sls_dir}']
-    opts['sls'] = sls
-    hub.idem.init.create(name, opts, ['nest'])
-    hub.pop.loop.start(hub.idem.init.apply(name, opts, ['states', 'nest'], *opts['sls']))
+    sls_sources = [f'file://{sls_dir}']
+    hub.pop.loop.start(hub.idem.init.apply(name, sls_sources, render, runtime, ['states', 'nest'], cache_dir, sls))
     ret = hub.idem.RUNS[name]['running']
     return ret
 

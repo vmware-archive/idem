@@ -40,28 +40,41 @@ def cli(hub):
     Execute a single idem run from the cli
     '''
     hub.pop.conf.integrate(['idem'], cli='idem', roots=True)
-    opts = hub.OPT['idem']
-    hub.pop.loop.start(hub.idem.init.apply('cli', opts, ['states'], *opts['sls']))
+    hub.pop.loop.start(
+            hub.idem.init.apply(
+                'cli',
+                hub.OPT['idem']['sls_sources'],
+                hub.OPT['idem']['render'],
+                hub.OPT['idem']['runtime'],
+                ['states'],
+                hub.OPT['idem']['cache_dir'],
+                hub.OPT['idem']['sls'],
+                )
+            )
     # TODO Add outputter support here
     import pprint
     pprint.pprint(hub.idem.RUNS['cli']['running'])
 
 
-def create(hub, name, opts, subs):
+def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
     '''
     Create a new instance to execute against
     '''
-    hub.idem.RUNS[name] = {'opts': opts}
-    hub.idem.RUNS[name]['states'] = {}
-    # The names of the subs permitted to be executed on the hub
-    hub.idem.RUNS[name]['subs'] = subs
+    hub.idem.RUNS[name] = {
+            'sls_sources': sls_sources,
+            'render': render,
+            'runtime': runtime,
+            'subs': subs,
+            'cache_dir': cache_dir,
+            'states': {},
+            }
 
 
-async def apply(hub, name, opts, subs, *sls):
+async def apply(hub, name, sls_sources, render, runtime, subs, cache_dir, sls):
     '''
     Run idem!
     '''
-    hub.idem.init.create(name, opts, subs)
+    hub.idem.init.create(name, sls_sources, render, runtime, subs, cache_dir)
     # Get the sls file
     # render it
     # compile high data to "new" low data (bypass keyword issues)

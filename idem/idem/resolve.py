@@ -13,7 +13,6 @@ async def gather(hub, name, *sls):
     '''
     Gather the named sls references
     '''
-    opts = hub.idem.RUNS[name]['opts']
     hub.idem.RUNS[name]['resolved'] = set()
     hub.idem.RUNS[name]['files'] = set()
     hub.idem.RUNS[name]['high'] = {}
@@ -23,7 +22,7 @@ async def gather(hub, name, *sls):
         if not cfn:
             hub.idem.RUNS[name]['errors'].append('SLS ref {sls_ref} did not resolve to a file')
             continue
-        state = hub.rend.init.parse(cfn, opts.get('render', 'yaml'))
+        state = hub.rend.init.parse(cfn, hub.idem.RUNS[name]['render'])
         if not isinstance(state, dict):
             hub.idem.RUNS['errors'].append('SLS {sls_ref} is not formed as a dict')
         if 'include' in state:
