@@ -1,1 +1,6 @@
+PyYaml
+wheel
+jinja2
 pop
+rend
+toml
