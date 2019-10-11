@@ -41,8 +41,7 @@ def cli(hub):
     '''
     hub.pop.conf.integrate(['idem'], cli='idem', roots=True)
     opts = hub.OPT['idem']
-    hub.idem.init.create('cli', opts)
-    hub.pop.loop.start(hub.idem.init.apply('cli', opts, *opts['sls']))
+    hub.pop.loop.start(hub.idem.init.apply('cli', opts, ['states'], *opts['sls']))
     # TODO Add outputter support here
     import pprint
     pprint.pprint(hub.idem.RUNS['cli']['running'])
