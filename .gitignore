@@ -68,8 +68,7 @@ pytest.ini
 *.pot
 
 # Sphinx documentation
-doc/_build/
-doc/user/ubu/_build/
+docs/_build/
 
 # Local VIM RC
 .lvimrc

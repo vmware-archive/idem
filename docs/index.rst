@@ -10,6 +10,8 @@ Welcome to idem's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   topics/intro
+   topics/extending
 
 
 Indices and tables
