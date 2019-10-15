@@ -17,8 +17,12 @@ def __init__(hub):
     hub.pop.sub.load_subdirs(hub.idem)
     hub.idem.RUNS = {}
     hub.pop.sub.add('idem.sls')
-    hub.pop.sub.add('idem.states')
     hub.pop.sub.add(dyne_name='rend')
+    hub.pop.sub.add(dyne_name='output')
+    hub.pop.sub.add(dyne_name='exec')
+    hub.pop.sub.load_subdirs(hub.exec, recurse=True)
+    hub.pop.sub.add(dyne_name='states')
+    hub.pop.sub.load_subdirs(hub.states, recurse=True)
     hub.idem.init.req_map()
 
 

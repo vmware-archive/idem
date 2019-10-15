@@ -20,6 +20,10 @@ CLI_CONFIG = {
         'default': 'parallel',
         'help': 'Select which execution runtime to use',
         },
+    'output': {
+        'default': 'pprint',  # TODO: Add state outputter
+        'help': 'The putputter to use to display data',
+        },
     'sls': {
         'default': [],
         'nargs': '*',
@@ -29,3 +33,7 @@ CLI_CONFIG = {
 CONFIG = {}
 GLOBAL = {}
 SUBS = {}
+DYNE = {
+        'exec': ['exec'],
+        'states': ['states'],
+        }
