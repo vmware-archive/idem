@@ -4,8 +4,7 @@ Idem
 
 Idem is an idempotent dataflow programming language. It exposes stateful
 programming constructs that makes things like enforcing the state
-of an application, configuration, SaaS system, or
-`interface <https://www.cs.utah.edu/~germain/PPS/Topics/interfaces.html>`_
+of an application, configuration, SaaS system, or others very
 simple.
 
 Since Idem is a programming language, it can also be used for data
