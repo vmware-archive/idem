@@ -7,7 +7,7 @@ import pop.hub
 import idem.conf
 
 
-def run_sls(sls):
+def run_sls(sls, runtime='parallel'):
     '''
     Pass in an sls list and run it!
     '''
@@ -18,7 +18,6 @@ def run_sls(sls):
     hub.pop.sub.load_subdirs(hub.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest.again)
-    runtime = 'parallel'
     render = 'yaml'
     cache_dir = tempfile.mkdtemp()
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
@@ -56,8 +55,8 @@ def test_req():
     '''
     ret = run_sls(['req'])
     assert ret['test_|-needs_fail_|-needs_fail_|-nop']['result'] == False
-    assert ret['test_|-needs_fail_|-needs_fail_|-nop']['__run_num'] == 2
-    assert ret['test_|-needs_|-needs_|-nop']['__run_num'] == 2
+    assert ret['test_|-needs_fail_|-needs_fail_|-nop']['__run_num'] == 4
+    assert ret['test_|-needs_|-needs_|-nop']['__run_num'] == 3
     assert ret['test_|-needs_|-needs_|-nop']['result'] == True
 
 
@@ -81,7 +80,7 @@ def test_onfail():
     assert ret['test_|-runs_|-runs_|-nop']['__run_num'] == 2
     assert ret['test_|-runs_|-runs_|-nop']['result'] == True
     assert ret['test_|-bad_|-bad_|-nop']['result'] == False
-    assert ret['test_|-bad_|-bad_|-nop']['__run_num'] == 2
+    assert ret['test_|-bad_|-bad_|-nop']['__run_num'] == 3
     assert ret['test_|-fails_|-fails_|-fail_without_changes']['__run_num'] == 1
     assert ret['test_|-fails_|-fails_|-fail_without_changes']['result'] == False
 
@@ -98,5 +97,15 @@ def test_run_name():
 
 
 def test_params():
-    ret = run_sls(['params'])
-    assert ret['nest.params_|-positional_params_|-positional_params_|-kwargs']['comment'] == 'bar None baz'
+    ret = run_sls(['order'], runtime='serial')
+    assert ret['test_|-first_|-first_|-noop']['__run_num'] == 1
+    assert ret['test_|-second_|-second_|-noop']['__run_num'] == 2
+    assert ret['test_|-third_|-third_|-noop']['__run_num'] == 3
+    assert ret['test_|-forth_|-forth_|-noop']['__run_num'] == 4
+    assert ret['test_|-fifth_|-fifth_|-noop']['__run_num'] == 5
+    assert ret['test_|-sixth_|-sixth_|-noop']['__run_num'] == 6
+    assert ret['test_|-seventh_|-seventh_|-noop']['__run_num'] == 7
+    assert ret['test_|-eighth_|-eighth_|-noop']['__run_num'] == 8
+    assert ret['test_|-ninth_|-ninth_|-noop']['__run_num'] == 9
+    assert ret['test_|-tenth_|-tenth_|-noop']['__run_num'] == 10
+

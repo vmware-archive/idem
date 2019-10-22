@@ -2,7 +2,7 @@
 import asyncio
 
 
-async def runtime(hub, name, seq, low, running, run_num):
+async def runtime(hub, name, seq, low, running):
     '''
     Execute the runtime in parallel mode
     '''
@@ -17,6 +17,7 @@ async def runtime(hub, name, seq, low, running, run_num):
         # or we are done
         pass
     for ind in inds:
-        await hub.idem.rules.init.run(name, low, seq[ind], running, run_num)
+        await hub.idem.rules.init.run(name, low, seq[ind], running, hub.idem.RUNS[name]['run_num'])
+        hub.idem.RUNS[name]['run_num'] += 1
     if len(low) <= len(running):
         return

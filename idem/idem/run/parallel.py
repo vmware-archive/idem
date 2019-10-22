@@ -2,7 +2,7 @@
 import asyncio
 
 
-async def runtime(hub, name, seq, low, running, run_num):
+async def runtime(hub, name, seq, low, running):
     '''
     Execute the runtime in parallel mode
     '''
@@ -18,7 +18,16 @@ async def runtime(hub, name, seq, low, running, run_num):
         pass
     coros = []
     for ind in inds:
-        coros.append(hub.idem.rules.init.run(name, low, seq[ind], running, run_num))
+        coros.append(
+                hub.idem.rules.init.run(
+                    name,
+                    low,
+                    seq[ind],
+                    running,
+                    hub.idem.RUNS[name]['run_num'],
+                    )
+                )
+        hub.idem.RUNS[name]['run_num'] += 1
     for fut in asyncio.as_completed(coros):
         await fut
     if len(low) <= len(running):
