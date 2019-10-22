@@ -2,6 +2,40 @@
 import copy
 
 
+def order_chunks(hub, chunks):
+    '''
+    Sort the chunk list verifying that the chunks follow the order
+    specified in the order options.
+    '''
+    cap = 1
+    for chunk in chunks:
+        if 'order' in chunk:
+            if not isinstance(chunk['order'], int):
+                continue
+
+            chunk_order = chunk['order']
+            if chunk_order > cap - 1 and chunk_order > 0:
+                cap = chunk_order + 100
+    for chunk in chunks:
+        if 'order' not in chunk:
+            chunk['order'] = cap
+            continue
+
+        if not isinstance(chunk['order'], (int, float)):
+            if chunk['order'] == 'last':
+                chunk['order'] = cap + 1000000
+            elif chunk['order'] == 'first':
+                chunk['order'] = 0
+            else:
+                chunk['order'] = cap
+        if 'name_order' in chunk:
+            chunk['order'] = chunk['order'] + chunk.pop('name_order') / 10000.0
+        if chunk['order'] < 0:
+            chunk['order'] = cap + 1000000 + chunk['order']
+    chunks.sort(key=lambda chunk: (chunk['order'], '{0[state]}{0[name]}{0[fun]}'.format(chunk)))
+    return chunks
+
+
 def compile(hub, high):
     '''
     "Compile" the high data as it is retrieved from the CLI or YAML into
@@ -63,6 +97,5 @@ def compile(hub, high):
                 for fun in funcs:
                     live['fun'] = fun
                     chunks.append(live)
-    # TODO: Add ordering
-    #chunks = self.order_chunks(chunks)
+    chunks = hub.idem.low.order_chunks(chunks)
     return chunks

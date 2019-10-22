@@ -17,6 +17,7 @@ async def gather(hub, name, *sls):
     hub.idem.RUNS[name]['files'] = set()
     hub.idem.RUNS[name]['high'] = {}
     hub.idem.RUNS[name]['errors'] = []
+    hub.idem.RUNS[name]['iorder'] = 100000
     for sls_ref in sls:
         cfn = await hub.idem.get.ref(name, sls_ref)
         if not cfn:
@@ -34,10 +35,47 @@ async def gather(hub, name, *sls):
         hub.idem.resolve.extend(name, state, sls_ref)
         hub.idem.resolve.exclude(name, state, sls_ref)
         hub.idem.resolve.decls(name, state, sls_ref)
+        hub.idem.resolve.iorder(name, state)
         hub.idem.RUNS[name]['resolved'].add(sls_ref)
         await hub.idem.resolve.includes(name, include, state, sls_ref, cfn)
         hub.idem.RUNS[name]['high'].update(state)
         hub.idem.RUNS[name]['files'].add(cfn)
+
+
+def iorder(hub, name, state):
+    '''
+    Take a state and apply the iorder system
+    '''
+    for id_ in state:
+        for s_dec in state[id_]:
+            if not isinstance(s_dec, str):
+                # PyDSL OrderedDict?
+                continue
+
+            if not isinstance(state[id_], dict):
+                # Include's or excludes as lists?
+                continue
+            if not isinstance(state[id_][s_dec], list):
+                # Bad syntax, let the verify seq pick it up later on
+                continue
+
+            found = False
+            if s_dec.startswith('_'):
+                continue
+
+            for arg in state[id_][s_dec]:
+                if isinstance(arg, dict):
+                    if len(arg) > 0:
+                        if next(iter(arg)) == 'order':
+                            found = True
+            if not found:
+                if not isinstance(state[id_][s_dec], list):
+                    # quite certainly a syntax error, managed elsewhere
+                    continue
+                state[id_][s_dec].append(
+                        {'order': hub.idem.RUNS[name]['iorder']}
+                        )
+                hub.idem.RUNS[name]['iorder'] += 1
 
 
 def extend(hub, name, state, sls_ref):
