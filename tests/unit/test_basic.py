@@ -95,3 +95,8 @@ def test_onchanges():
 def test_run_name():
     ret = run_sls(['update'])
     assert ret['test_|-king_arthur_|-totally_extra_alls_|-nop']['__run_num'] == 2
+
+
+def test_params():
+    ret = run_sls(['params'])
+    assert ret['nest.params_|-positional_params_|-positional_params_|-kwargs']['comment'] == 'bar None baz'

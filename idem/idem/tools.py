@@ -1,6 +1,7 @@
 # Import python libs
 import copy
 import fnmatch
+import inspect
 
 
 def gen_tag(hub, chunk):
@@ -91,8 +92,13 @@ def format_call(hub,
 
     sig = fun.signature
     for name, param in sig.parameters.items():
+        if name == 'hub':
+            continue
         if param.kind.name == 'POSITIONAL_OR_KEYWORD':
-            args.append(name)
+            if isinstance(param.default, inspect._empty):
+                args.append(name)
+            else:
+                kwargs[name] = param.default
         if param.kind.name == 'KEYWORD_ONLY':
             kwargs[name] = param.default
         if param.kind.name == 'VAR_KEYWORD':
