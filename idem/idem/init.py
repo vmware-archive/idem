@@ -55,9 +55,10 @@ def cli(hub):
                 hub.OPT['idem']['sls'],
                 )
             )
-    # TODO Add outputter support here
-    import pprint
-    pprint.pprint(hub.idem.RUNS['cli']['running'])
+    running = hub.idem.RUNS['cli']['running']
+    output = hub.OPT['idem']['output']
+    display = getattr(hub, f'output.{output}.display')(running)
+    print(display)
 
 
 def create(hub, name, sls_sources, render, runtime, subs, cache_dir):

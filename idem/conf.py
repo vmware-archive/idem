@@ -36,4 +36,5 @@ SUBS = {}
 DYNE = {
         'exec': ['exec'],
         'states': ['states'],
+        'output': ['output'],
         }
