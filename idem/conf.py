@@ -4,6 +4,11 @@ CLI_CONFIG = {
         'nargs': '*',
         'help': 'list off the sources that should be used for gathering sls files and data',
         },
+    'tree': {
+        'default': '',
+        'options': ['-T'],
+        'help': 'The directory containing sls files',
+        },
     'cache_dir': {
         'default': '/var/cache/idem',
         'help': 'The location to use for the cache directory',

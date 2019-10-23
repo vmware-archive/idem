@@ -9,6 +9,7 @@
 
 # Import python libs
 import asyncio
+import os
 
 __func_alias__ = {'compile_': 'compile'}
 
@@ -44,10 +45,18 @@ def cli(hub):
     Execute a single idem run from the cli
     '''
     hub.pop.conf.integrate(['idem'], cli='idem', roots=True)
+    sls_sources = hub.OPT['idem']['sls_sources']
+    if hub.OPT['idem']['tree']:
+        src = os.path.join('file://', hub.OPT['idem']['tree'])
+        if len(sls_sources) == 1:
+            if sls_sources[0] == 'file://':
+                sls_sources = [src]
+            else:
+                sls_sources.append(src)
     hub.pop.loop.start(
             hub.idem.init.apply(
                 'cli',
-                hub.OPT['idem']['sls_sources'],
+                sls_sources,
                 hub.OPT['idem']['render'],
                 hub.OPT['idem']['runtime'],
                 ['states'],
