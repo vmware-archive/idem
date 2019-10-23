@@ -21,7 +21,7 @@ CLI_CONFIG = {
         'help': 'Select which execution runtime to use',
         },
     'output': {
-        'default': 'pprint',  # TODO: Add state outputter
+        'default': 'idem',
         'help': 'The putputter to use to display data',
         },
     'sls': {

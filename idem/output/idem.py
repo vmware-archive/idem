@@ -1,3 +1,9 @@
+# NOTES
+# This is a VERY simple outputter for idem, it does not do everything the
+# Salt highstate outputter does, and nor should it! This outputter should
+# not become hyper complicated, things like terse should be another
+# outputter, this should really just get things like errors added
+
 # Import third party libs
 from colored import fg, attr
 
@@ -8,7 +14,10 @@ def display(hub, data):
     '''
     endc = attr(0)
     strs = []
-    for tag, ret in data.items():
+    for tag in sorted(
+            data,
+            key=lambda k: data[k].get('__run_num', 0)):
+        ret = data[tag]
         comps = tag.split('_|-')
         state = comps[0]
         id_ = comps[1]
