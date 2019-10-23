@@ -17,7 +17,7 @@ CLI_CONFIG = {
         'help': 'The render pipe to use, this allows for the language to be specified',
         },
     'runtime': {
-        'default': 'parallel',
+        'default': 'serial',
         'help': 'Select which execution runtime to use',
         },
     'output': {
