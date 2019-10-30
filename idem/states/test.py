@@ -130,7 +130,7 @@ def update_low(hub, name, __run_name):
         '__id__': 'king_arthur',
         'state': 'test',
         'fun': 'nop'}
-    hub.idem.RUNS[__run_name]['low'].append(extra)
+    hub.idem.RUNS[__run_name]['add_low'].append(extra)
     return succeed_without_changes(hub, name)
 
 

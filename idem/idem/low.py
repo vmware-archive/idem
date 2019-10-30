@@ -36,7 +36,7 @@ def order_chunks(hub, chunks):
     return chunks
 
 
-def compile(hub, high):
+def compile(hub, high, add_low):
     '''
     "Compile" the high data as it is retrieved from the CLI or YAML into
     the individual state executor structures
@@ -97,5 +97,6 @@ def compile(hub, high):
                 for fun in funcs:
                     live['fun'] = fun
                     chunks.append(live)
+    chunks.extend(add_low)
     chunks = hub.idem.low.order_chunks(chunks)
     return chunks

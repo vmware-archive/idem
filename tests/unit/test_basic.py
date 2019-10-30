@@ -109,3 +109,6 @@ def test_params():
     assert ret['test_|-ninth_|-ninth_|-noop']['__run_num'] == 9
     assert ret['test_|-tenth_|-tenth_|-noop']['__run_num'] == 10
 
+def test_blocks():
+    ret = run_sls(['blocks'])
+    assert 'test_|-wow_|-wow_|-nop' in ret

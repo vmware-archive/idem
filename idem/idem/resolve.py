@@ -39,20 +39,18 @@ async def render(hub, name):
         cfn = hub.idem.RUNS[name]['sls_refs'][sls_ref]
         for bname, block in blocks.items():
             clear = True
-            for key, val in block.get('keys', {}):
+            for key, val in block.get('keys', {}).items():
                 # TODO: This should be an aditional render requisite plugin
                 # subsystem, change it to a subsystem as soon as any new conditionals
                 # are added!!
                 clear = False
                 if key == 'require':
                     for tag, data in hub.idem.RUNS[name]['running'].items():
-                        if data['__id__'] == val:
+                        if data['name'] == val:
                             clear = True
                             break
-                    if clear:
-                        break
                 if clear:
-                    break
+                    continue
             if clear:
                 state = hub.rend.init.parse_bytes(block, [hub.idem.RUNS[name]['render']])
                 await hub.idem.resolve.introduce(name, state, sls_ref, cfn)

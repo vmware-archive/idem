@@ -6,8 +6,6 @@ async def start(hub, name):
     if not hub.idem.RUNS[name].get('low'):
         raise ValueError()
     rtime = hub.idem.RUNS[name]['runtime']
-    hub.idem.RUNS[name]['running'] = {}
-    hub.idem.RUNS[name]['run_num'] = 1
     low = hub.idem.RUNS[name].get('low')
     ref = f'idem.run.{rtime}.runtime'
     old_seq = {}
@@ -18,6 +16,9 @@ async def start(hub, name):
         if seq == old_seq:
             raise Exception()
         await hub.pop.ref.last(ref)(name, seq, low, hub.idem.RUNS[name]['running'])
+        await hub.idem.resolve.render(name)
+        await hub.idem.init.compile(name)
+        low = hub.idem.RUNS[name].get('low')
         if len(low) <= len(hub.idem.RUNS[name]['running']):
             break
         if len(low) == old_low_len:
@@ -25,3 +26,4 @@ async def start(hub, name):
             raise Exception()
         old_seq = seq
         old_low_len = len(low)
+        # Check for any new, available blocks to render

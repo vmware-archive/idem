@@ -88,6 +88,9 @@ def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
             'iorder': 100000,
             'sls_refs': {},
             'blocks': {},
+            'running': {},
+            'run_num': 1,
+            'add_low': [],
             }
 
 
