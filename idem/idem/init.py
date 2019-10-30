@@ -81,6 +81,13 @@ def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
             'subs': subs,
             'cache_dir': cache_dir,
             'states': {},
+            'resolved': set(),
+            'files': set(),
+            'high': {},
+            'errors': [],
+            'iorder': 100000,
+            'sls_refs': {},
+            'blocks': {},
             }
 
 

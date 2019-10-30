@@ -13,33 +13,72 @@ async def gather(hub, name, *sls):
     '''
     Gather the named sls references
     '''
-    hub.idem.RUNS[name]['resolved'] = set()
-    hub.idem.RUNS[name]['files'] = set()
-    hub.idem.RUNS[name]['high'] = {}
-    hub.idem.RUNS[name]['errors'] = []
-    hub.idem.RUNS[name]['iorder'] = 100000
+    await hub.idem.resolve.get_blocks(name, sls)
+    await hub.idem.resolve.render(name)
+
+
+async def get_blocks(hub, name, sls):
     for sls_ref in sls:
         cfn = await hub.idem.get.ref(name, sls_ref)
         if not cfn:
             hub.idem.RUNS[name]['errors'].append('SLS ref {sls_ref} did not resolve to a file')
             continue
-        state = hub.rend.init.parse(cfn, hub.idem.RUNS[name]['render'])
-        if not isinstance(state, dict):
-            hub.idem.RUNS['errors'].append('SLS {sls_ref} is not formed as a dict')
-        if 'include' in state:
-            if not isinstance(state['include'], list):
-                hub.idem.RUNS['errors'].append('Include Declaration in SLS {sls_ref} is not formed as a list')
-            include = state.pop(include)
-        else:
-            include = []
-        hub.idem.resolve.extend(name, state, sls_ref)
-        hub.idem.resolve.exclude(name, state, sls_ref)
-        hub.idem.resolve.decls(name, state, sls_ref)
-        hub.idem.resolve.iorder(name, state)
+        blocks = hub.rend.init.blocks(cfn)
+        hub.idem.RUNS[name]['blocks'][sls_ref] = blocks
+        hub.idem.RUNS[name]['sls_refs'][sls_ref] = cfn
         hub.idem.RUNS[name]['resolved'].add(sls_ref)
-        await hub.idem.resolve.includes(name, include, state, sls_ref, cfn)
-        hub.idem.RUNS[name]['high'].update(state)
         hub.idem.RUNS[name]['files'].add(cfn)
+
+
+async def render(hub, name):
+    '''
+    Pop the available blocks and render them if they have satisfied requisites
+    '''
+    rendered = {}
+    for sls_ref, blocks in hub.idem.RUNS[name]['blocks'].items():
+        cfn = hub.idem.RUNS[name]['sls_refs'][sls_ref]
+        for bname, block in blocks.items():
+            clear = True
+            for key, val in block.get('keys', {}):
+                # TODO: This should be an aditional render requisite plugin
+                # subsystem, change it to a subsystem as soon as any new conditionals
+                # are added!!
+                clear = False
+                if key == 'require':
+                    for tag, data in hub.idem.RUNS[name]['running'].items():
+                        if data['__id__'] == val:
+                            clear = True
+                            break
+                    if clear:
+                        break
+                if clear:
+                    break
+            if clear:
+                state = hub.rend.init.parse_bytes(block, [hub.idem.RUNS[name]['render']])
+                await hub.idem.resolve.introduce(name, state, sls_ref, cfn)
+                rendered[sls_ref] = bname
+    for sls_ref, bname in rendered.items():
+        hub.idem.RUNS[name]['blocks'][sls_ref].pop(bname)
+
+
+async def introduce(hub, name, state, sls_ref, cfn):
+    '''
+    Introduce the raw state into the running dataset
+    '''
+    if not isinstance(state, dict):
+        hub.idem.RUNS['errors'].append('SLS {sls_ref} is not formed as a dict')
+    if 'include' in state:
+        if not isinstance(state['include'], list):
+            hub.idem.RUNS['errors'].append('Include Declaration in SLS {sls_ref} is not formed as a list')
+        include = state.pop(include)
+    else:
+        include = []
+    hub.idem.resolve.extend(name, state, sls_ref)
+    hub.idem.resolve.exclude(name, state, sls_ref)
+    hub.idem.resolve.decls(name, state, sls_ref)
+    hub.idem.resolve.iorder(name, state)
+    await hub.idem.resolve.includes(name, include, state, sls_ref, cfn)
+    hub.idem.RUNS[name]['high'].update(state)
 
 
 def iorder(hub, name, state):
