@@ -5,10 +5,15 @@ CLI_CONFIG = {
         'help': 'list off the sources that should be used for gathering sls files and data',
         },
     'test': {
-        'options': ['-T'],
+        'options': ['-t'],
         'default': False,
         'action': 'store_true',
         'help': 'Set the idem run to execute in test mode. No changes will be made, idem will only detect if changes will be made in a real run.',
+        },
+    'tree': {
+        'default': '',
+        'options': ['-T'],
+        'help': 'The directory containing sls files',
         },
     'cache_dir': {
         'default': '/var/cache/idem',
