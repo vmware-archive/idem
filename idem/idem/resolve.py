@@ -65,6 +65,7 @@ async def introduce(hub, name, state, sls_ref, cfn):
     '''
     if not isinstance(state, dict):
         hub.idem.RUNS[name]['errors'].append('SLS {sls_ref} is not formed as a dict')
+        return
     if 'include' in state:
         if not isinstance(state['include'], list):
             hub.idem.RUNS[name]['errors'].append('Include Declaration in SLS {sls_ref} is not formed as a list')
