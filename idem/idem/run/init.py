@@ -5,6 +5,7 @@ async def start(hub, name):
     '''
     if not hub.idem.RUNS[name].get('low'):
         raise ValueError()
+    ctx = {'run_name': name, 'test': hub.idem.RUNS[name]['test']}
     rtime = hub.idem.RUNS[name]['runtime']
     hub.idem.RUNS[name]['running'] = {}
     hub.idem.RUNS[name]['run_num'] = 1
@@ -17,7 +18,7 @@ async def start(hub, name):
         seq = hub.idem.req.init.seq(low, hub.idem.RUNS[name]['running'])
         if seq == old_seq:
             raise Exception()
-        await hub.pop.ref.last(ref)(name, seq, low, hub.idem.RUNS[name]['running'])
+        await getattr(hub, ref)(name, ctx, seq, low, hub.idem.RUNS[name]['running'])
         if len(low) <= len(hub.idem.RUNS[name]['running']):
             break
         if len(low) == old_low_len:

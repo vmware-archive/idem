@@ -91,7 +91,7 @@ def get_func(hub, name, chunk):
     return None
 
 
-async def run(hub, name, low, seq_comp, running, run_num):
+async def run(hub, name, ctx, low, seq_comp, running, run_num):
     '''
     All requisites have been met for this low chunk.
     '''
@@ -125,14 +125,13 @@ async def run(hub, name, low, seq_comp, running, run_num):
             'result': False,
             '__run_num': run_num}
         return
+    chunk['ctx'] = ctx
     call = hub.idem.tools.format_call(func, chunk, expected_extra_kws=STATE_INTERNAL_KEYWORDS)
     for rdat in rdats:
         if 'pre' in rdat:
             ret = rdat['pre'](*call['args'], **call['kwargs'])
             if asyncio.iscoroutine(ret):
                 ret = await ret
-    if '__run_name' in call['avail_kwargs'] or '__run_name' in call['avail_args']:
-        call['kwargs']['__run_name'] = name
     ret = func(*call['args'], **call['kwargs'])
     if asyncio.iscoroutine(ret):
         ret = await ret
