@@ -64,10 +64,10 @@ async def introduce(hub, name, state, sls_ref, cfn):
     Introduce the raw state into the running dataset
     '''
     if not isinstance(state, dict):
-        hub.idem.RUNS['errors'].append('SLS {sls_ref} is not formed as a dict')
+        hub.idem.RUNS[name]['errors'].append('SLS {sls_ref} is not formed as a dict')
     if 'include' in state:
         if not isinstance(state['include'], list):
-            hub.idem.RUNS['errors'].append('Include Declaration in SLS {sls_ref} is not formed as a list')
+            hub.idem.RUNS[name]['errors'].append('Include Declaration in SLS {sls_ref} is not formed as a list')
         include = state.pop(include)
     else:
         include = []
