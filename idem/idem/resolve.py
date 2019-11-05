@@ -52,7 +52,7 @@ async def render(hub, name):
                 if clear:
                     continue
             if clear:
-                state = hub.rend.init.parse_bytes(block, [hub.idem.RUNS[name]['render']])
+                state = hub.rend.init.parse_bytes(block, hub.idem.RUNS[name]['render'])
                 await hub.idem.resolve.introduce(name, state, sls_ref, cfn)
                 rendered[sls_ref] = bname
     for sls_ref, bname in rendered.items():

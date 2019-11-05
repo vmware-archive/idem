@@ -18,7 +18,7 @@ def run_sls(sls, runtime='parallel'):
     hub.pop.sub.load_subdirs(hub.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest)
     hub.pop.sub.load_subdirs(hub.nest.nest.again)
-    render = 'yaml'
+    render = 'jinja|yaml'
     cache_dir = tempfile.mkdtemp()
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
     sls_sources = [f'file://{sls_dir}']
