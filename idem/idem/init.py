@@ -62,6 +62,7 @@ def cli(hub):
                 ['states'],
                 hub.OPT['idem']['cache_dir'],
                 hub.OPT['idem']['sls'],
+                hub.OPT['idem']['test'],
                 )
             )
     running = hub.idem.RUNS['cli']['running']
@@ -70,7 +71,7 @@ def cli(hub):
     print(display)
 
 
-def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
+def create(hub, name, sls_sources, render, runtime, subs, cache_dir, test):
     '''
     Create a new instance to execute against
     '''
@@ -81,6 +82,7 @@ def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
             'subs': subs,
             'cache_dir': cache_dir,
             'states': {},
+            'test': test,
             'resolved': set(),
             'files': set(),
             'high': {},
@@ -94,11 +96,20 @@ def create(hub, name, sls_sources, render, runtime, subs, cache_dir):
             }
 
 
-async def apply(hub, name, sls_sources, render, runtime, subs, cache_dir, sls):
+async def apply(
+        hub,
+        name,
+        sls_sources,
+        render,
+        runtime,
+        subs,
+        cache_dir,
+        sls,
+        test=False):
     '''
     Run idem!
     '''
-    hub.idem.init.create(name, sls_sources, render, runtime, subs, cache_dir)
+    hub.idem.init.create(name, sls_sources, render, runtime, subs, cache_dir, test)
     # Get the sls file
     # render it
     # compile high data to "new" low data (bypass keyword issues)

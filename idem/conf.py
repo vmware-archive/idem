@@ -4,6 +4,12 @@ CLI_CONFIG = {
         'nargs': '*',
         'help': 'list off the sources that should be used for gathering sls files and data',
         },
+    'test': {
+        'options': ['-t'],
+        'default': False,
+        'action': 'store_true',
+        'help': 'Set the idem run to execute in test mode. No changes will be made, idem will only detect if changes will be made in a real run.',
+        },
     'tree': {
         'default': '',
         'options': ['-T'],

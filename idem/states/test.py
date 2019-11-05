@@ -34,16 +34,16 @@ calls, e.g. running, calling, logging, output filtering etc.
 import random
 
 
-def nop(hub, name, **kwargs):
+def nop(hub, ctx, name, **kwargs):
     '''
     A no-op state that does nothing. Useful in conjunction with the `use`
     requisite, or in templates which could otherwise be empty due to jinja
     rendering
     '''
-    return succeed_without_changes(hub, name)
+    return succeed_without_changes(hub, ctx, name)
 
 
-def succeed_without_changes(hub, name, **kwargs):
+def succeed_without_changes(hub, ctx, name, **kwargs):
     '''
     name
         A unique string.
@@ -57,7 +57,7 @@ def succeed_without_changes(hub, name, **kwargs):
     return ret
 
 
-def fail_without_changes(hub, name, **kwargs):
+def fail_without_changes(hub, ctx, name, **kwargs):
     '''
     Returns failure.
 
@@ -74,7 +74,7 @@ def fail_without_changes(hub, name, **kwargs):
     return ret
 
 
-def succeed_with_changes(hub, name, **kwargs):
+def succeed_with_changes(hub, ctx, name, **kwargs):
     '''
     Returns successful and changes is not empty
 
@@ -98,7 +98,7 @@ def succeed_with_changes(hub, name, **kwargs):
     return ret
 
 
-def fail_with_changes(hub, name, **kwargs):
+def fail_with_changes(hub, ctx, name, **kwargs):
     '''
     Returns failure and changes is not empty.
 
@@ -120,7 +120,7 @@ def fail_with_changes(hub, name, **kwargs):
     return ret
 
 
-def update_low(hub, name, __run_name):
+def update_low(hub, ctx, name):
     '''
     Use the __run_name to add a run to the low
     '''
@@ -130,11 +130,11 @@ def update_low(hub, name, __run_name):
         '__id__': 'king_arthur',
         'state': 'test',
         'fun': 'nop'}
-    hub.idem.RUNS[__run_name]['add_low'].append(extra)
-    return succeed_without_changes(hub, name)
+    hub.idem.RUNS[ctx['run_name']]['add_low'].append(extra)
+    return succeed_without_changes(hub, ctx, name)
 
 
-def mod_watch(hub, name, **kwargs):
+def mod_watch(hub, ctx, name, **kwargs):
     '''
     Return a mod_watch call for test
     '''
