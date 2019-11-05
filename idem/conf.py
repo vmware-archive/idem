@@ -18,7 +18,7 @@ CLI_CONFIG = {
         'help': 'The root directory to run idem from. By default it will be "/", or in the case of running as non-root it is set to <HOMEDIR>/.idem',
         },
     'render': {
-        'default': 'yaml',
+        'default': 'jinja|yaml',
         'help': 'The render pipe to use, this allows for the language to be specified',
         },
     'runtime': {
