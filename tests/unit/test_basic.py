@@ -35,6 +35,11 @@ def test_ugly1():
     assert ret == ['ID foo in SLS ugly1 is not a dictionary']
 
 
+def test_shebang():
+    ret = run_sls(['bang'])
+    assert 'test_|-test_|-test_|-nop' in ret
+
+
 def test_nest():
     ret = run_sls(['nest'])
     assert ret['nest.again.another.test_|-baz_|-baz_|-nop']['result']
