@@ -23,8 +23,16 @@ def run_sls(sls, runtime='parallel'):
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
     sls_sources = [f'file://{sls_dir}']
     hub.pop.loop.start(hub.idem.init.apply(name, sls_sources, render, runtime, ['states', 'nest'], cache_dir, sls))
+    errors = hub.idem.RUNS[name]['errors']
+    if errors:
+        return errors
     ret = hub.idem.RUNS[name]['running']
     return ret
+
+
+def test_ugly1():
+    ret = run_sls(['ugly1'])
+    assert ret == ['ID foo in SLS ugly1 is not a dictionary']
 
 
 def test_nest():

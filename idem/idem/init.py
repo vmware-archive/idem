@@ -65,6 +65,11 @@ def cli(hub):
                 hub.OPT['idem']['test'],
                 )
             )
+    errors = hub.idem.RUNS['cli']['errors']
+    if errors:
+        display = getattr(hub, 'output.nested.display')(errors)
+        print(errors)
+        return
     running = hub.idem.RUNS['cli']['running']
     output = hub.OPT['idem']['output']
     display = getattr(hub, f'output.{output}.display')(running)
@@ -115,7 +120,11 @@ async def apply(
     # compile high data to "new" low data (bypass keyword issues)
     # Run the low data using act/idem
     await hub.idem.resolve.gather(name, *sls)
-    lowdata = await hub.idem.init.compile(name)
+    if hub.idem.RUNS[name]['errors']:
+        return
+    await hub.idem.init.compile(name)
+    if hub.idem.RUNS[name]['errors']:
+        return
     ret = await hub.idem.run.init.start(name)
 
 
