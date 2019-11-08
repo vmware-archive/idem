@@ -12,6 +12,7 @@ Welcome to idem's documentation!
 
    topics/intro
    topics/extending
+   topics/migrate_salt
 
 
 Indices and tables
