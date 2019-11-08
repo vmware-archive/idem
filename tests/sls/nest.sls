@@ -1,3 +1,8 @@
+req:
+  test.nop:
+    - require:
+      - nest.again.another.test: baz
+
 foo:
   nest.test.nop: []
 
@@ -9,3 +14,4 @@ baz:
 
 quo:
   idem.init.create: []
+

@@ -47,6 +47,7 @@ def test_nest():
     assert ret['nest.test_|-foo_|-foo_|-nop']['result']
     # verify that the invalid state is not run
     assert not ret['idem.init_|-quo_|-quo_|-create']['result']
+    assert ret['test_|-req_|-req_|-nop']['__run_num'] == 5
 
 
 def test_basic():
