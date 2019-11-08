@@ -30,6 +30,11 @@ def run_sls(sls, runtime='parallel'):
     return ret
 
 
+def test_treq():
+    ret = run_sls(['treq'])
+    assert ret['test_|-to_treq_|-to_treq_|-treq']['__run_num'] == 4
+
+
 def test_ugly1():
     ret = run_sls(['ugly1'])
     assert ret == ['ID foo in SLS ugly1 is not a dictionary']

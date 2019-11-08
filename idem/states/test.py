@@ -33,6 +33,21 @@ calls, e.g. running, calling, logging, output filtering etc.
 # Import Python libs
 import random
 
+TREQ = {
+        'treq': {
+            'require': [
+                'test.nop',
+                ]
+            },
+        }
+
+
+def treq(hub, ctx, name, **kwargs):
+    '''
+    Ensure that a transparent requisite is applied
+    '''
+    return succeed_without_changes(hub, ctx, name)
+
 
 def nop(hub, ctx, name, **kwargs):
     '''
