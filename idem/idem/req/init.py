@@ -7,8 +7,7 @@ def seq(hub, low, running):
     3. Bahavior augments for the next chunk to run
     '''
     ret = {}
-    for ind in range(len(low)):
-        chunk = low[ind]
+    for ind, chunk in enumerate(low):
         tag = hub.idem.tools.gen_tag(chunk)
         if tag in running:
             # Already ran this one, don't add it to the sequence
