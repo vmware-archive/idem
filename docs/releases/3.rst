@@ -1,0 +1,80 @@
+==============
+Idem Release 3
+==============
+
+This is the initial public release of Idem, the release number 3 was chosen
+because the Salt State system should be considered version 1, with an internal
+version 2.
+
+This release introduces Idem to the world, it takes the Salt State system and
+migrates it to POP. In doing so the Salt State system has been simplified,
+extended, and revamped to become a standalone language and interface while
+following the ideals of POP to make it pluggable into other application
+stacks.
+
+Now Pluggable!
+==============
+
+The Salt State system exists as a single large .py file inside of Salt, the
+compiler and runtime are all inside a couple of classes and the system is tightly
+coupled with the Salt minion and execution runtime and environment. This also
+made the Salt state system very static and difficult to extend. For instance,
+an old saying on the Salt developer team was "How do we create new requisites
+for Salt? Ask Tom to make it".
+
+My goal in Idem was to make it in such a way that it could be completely decoupled
+from Salt, modernize the foundation, add asyncio, and make the system easier
+to extend. Now the render, compile, and runtime have been separated out, the
+runtime has been completely rewritten and things like requisites can be added
+as plugins and runtime rules. Idem can also execute multiple runs concurrently
+within the same process, and can execute states in parallel or serially.
+
+Idem can execute states in an imperative way or in a declarative way using
+requisites. This gives developers the best of both worlds. The ability to
+optimize execution for time or for ease of development and debugging.
+
+Runs Standalone!
+================
+
+The Idem command can be executed against a code tree directly just like a
+programming language. Instead of setting up minions, masters etc, just
+make a code tree with sls files and run Idem with the sls fils(s) you
+want to execute.
+
+Code Sources are Pluggable
+==========================
+
+Instead of tying the runtime statically to grabbing sources via Salt, the
+sources are now pluggable. This release only has a local filesystem plugin
+but it will be easy to add code sources that are over network connections.
+This should make Idem execution function without needing to have any
+form of code deployment, but that Idem will be able to execute directly
+from any network source, like http, S3, or git.
+
+Rendering is Separate
+=====================
+
+The render system in Salt turned out to be a generally useful system with
+virtually every attempt to read in files with structured data wanting to be
+processed though the render system. So for Idem the render system has been
+separated into a standalone project called `rend`. This project is written
+in POP and can be app-merged into any other POP project (like idem!). This
+makes the powerful render system from Salt available to other projects. In
+fact it is already being used bu other projects like `heist`.
+
+Idem is a Language Runtime
+==========================
+
+One of the main issues with configuration management tools is that we end
+up needing to re-write the backend components to work in additional languages
+and interfaces. The goal of Idem is to make this limitation go away! Instead
+of making yet another language, Idem ingests structured data. This means that
+any language can be written on top of Idem as an extension to `rend`. So Idem
+can be seen not as a yaml based language for idempotent management. But instead
+as assembly code that languages can be built on top of.
+
+I feel that the language war in configuration management is one of the primary
+limiting factors for the industry, and why we end up producing new languages
+to solve specific problems. My hope here is that support for all the managed
+interfaces can be built into Idem and then made available to any app that wants
+to use them.

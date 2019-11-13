@@ -1,0 +1,27 @@
+====================
+Idem 4 - Beyond Salt
+====================
+
+Idem 4 is a monumental release! This marks the first release where major
+support for an interface has been made available to app-merge into Idem.
+This release also marks the first major feature additions to Idem beyond
+the capabilities found in the Salt state system.
+
+Late Rendering With Render Blocks
+=================================
+
+This release adds the ability to to execute late rendering using a new
+feature in `rend` called render blocks. This allows for blocks of code
+to be rendered during the runtime and added to the overall execution of
+the state. This makes it easy to break apart the execution to be able to
+take arbitrary data during the run and apply it to the execution.
+
+Transparent Requisites
+======================
+
+Transparent requisites is a powerhouse feature! This new capability allows
+for state plugins to define requisites that will be automatically added into
+the mix. This makes it possible for the author of a state plugin to define that
+if a certain state is ever used, Idem will search the runtime to determine if
+any of the states defined as transparent requisites have been used and apply
+them with the desired requite.

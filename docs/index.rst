@@ -8,11 +8,12 @@ Welcome to idem's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :glob:
 
    topics/intro
    topics/extending
    topics/migrate_salt
+   releases/*
 
 
 Indices and tables
