@@ -11,6 +11,7 @@ Welcome to idem's documentation!
    :glob:
 
    topics/intro
+   topics/azure_quickstart
    topics/extending
    topics/migrate_salt
    releases/*
