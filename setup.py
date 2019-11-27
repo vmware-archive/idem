@@ -11,6 +11,9 @@ NAME = 'idem'
 PYPI_NAME = 'idemlang'
 DESC = ('')
 
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
+
 # Version info -- read without importing
 _locals = {}
 with open('{}/version.py'.format(NAME)) as fp:
@@ -53,6 +56,7 @@ setup(name=PYPI_NAME,
       url='',
       version=VERSION,
       description=DESC,
+      install_requires=REQUIREMENTS,
       classifiers=[
           'Operating System :: OS Independent',
           'Programming Language :: Python',
