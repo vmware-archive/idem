@@ -9,7 +9,10 @@ from setuptools import setup, Command
 
 NAME = 'idem'
 PYPI_NAME = 'idemlang'
-DESC = ('')
+DESC = ('Transform configuration into idempotent action.')
+
+with open('README.rst', encoding='utf-8') as f:
+    LONG_DESC = f.read()
 
 with open('requirements.txt') as f:
     REQUIREMENTS = f.read().splitlines()
@@ -56,7 +59,10 @@ setup(name=PYPI_NAME,
       url='',
       version=VERSION,
       description=DESC,
+
       install_requires=REQUIREMENTS,
+      long_description=LONG_DESC,
+      long_description_content_type='text/x-rst',
       classifiers=[
           'Operating System :: OS Independent',
           'Programming Language :: Python',
