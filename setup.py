@@ -9,7 +9,10 @@ from setuptools import setup, Command
 
 NAME = 'idem'
 PYPI_NAME = 'idemlang'
-DESC = ('')
+DESC = ('Transform configuration into idempotent action.')
+
+with open('README.rst', encoding='utf-8') as f:
+    LONG_DESC = f.read()
 
 # Version info -- read without importing
 _locals = {}
@@ -53,6 +56,8 @@ setup(name=PYPI_NAME,
       url='',
       version=VERSION,
       description=DESC,
+      long_description=LONG_DESC,
+      long_description_content_type='text/x-rst',
       classifiers=[
           'Operating System :: OS Independent',
           'Programming Language :: Python',
