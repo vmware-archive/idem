@@ -14,6 +14,9 @@ DESC = ('Transform configuration into idempotent action.')
 with open('README.rst', encoding='utf-8') as f:
     LONG_DESC = f.read()
 
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
+
 # Version info -- read without importing
 _locals = {}
 with open('{}/version.py'.format(NAME)) as fp:
@@ -56,6 +59,8 @@ setup(name=PYPI_NAME,
       url='',
       version=VERSION,
       description=DESC,
+
+      install_requires=REQUIREMENTS,
       long_description=LONG_DESC,
       long_description_content_type='text/x-rst',
       classifiers=[
