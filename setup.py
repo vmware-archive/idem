@@ -59,7 +59,6 @@ setup(name=PYPI_NAME,
       url='',
       version=VERSION,
       description=DESC,
-
       install_requires=REQUIREMENTS,
       long_description=LONG_DESC,
       long_description_content_type='text/x-rst',
