@@ -15,6 +15,15 @@ CLI_CONFIG = {
         'options': ['-T'],
         'help': 'The directory containing sls files',
         },
+    'takara_unit': {
+        'options': ['-u'],
+        'default': None,
+        'help': 'The Takara unit to work with, This enables Takara as a backend for secret storage in your idem states',
+        },
+    'seal_raw': {
+        'default': None,
+        'help': 'DO NOT USE! This option allows you to pass Takara unsealing secrets as command line arguments! This should only be used for testing!!',
+        },
     'cache_dir': {
         'default': '/var/cache/idem',
         'help': 'The location to use for the cache directory',

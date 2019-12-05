@@ -10,6 +10,7 @@
 # Import python libs
 import asyncio
 import os
+import copy
 
 __func_alias__ = {'compile_': 'compile'}
 
@@ -23,6 +24,7 @@ def __init__(hub):
     hub.pop.sub.add(dyne_name='exec')
     hub.pop.sub.load_subdirs(hub.exec, recurse=True)
     hub.pop.sub.add(dyne_name='states')
+    hub.pop.sub.add(dyne_name='takara')
     hub.pop.sub.load_subdirs(hub.states, recurse=True)
     hub.idem.init.req_map()
 
@@ -44,7 +46,20 @@ def cli(hub):
     '''
     Execute a single idem run from the cli
     '''
-    hub.pop.conf.integrate(['idem'], cli='idem', roots=True)
+    hub.pop.conf.integrate(['idem', 'takara'], cli='idem', roots=True)
+    hub.pop.loop.start(hub.idem.init.cli_apply())
+
+
+async def cli_apply(hub):
+    '''
+    Run the CLI routine in a loop
+    '''
+    if hub.OPT['idem']['takara_unit']:
+        tkw = copy.copy(hub.OPT['takara'])
+        tkw['unit'] = hub.OPT['idem']['takara_unit']
+        tkw['seal_raw'] = hub.OPT['idem']['seal_raw']
+        await hub.takara.init.setup(**tkw)
+        await hub.takara.init.unseal(**tkw)
     sls_sources = hub.OPT['idem']['sls_sources']
     if hub.OPT['idem']['tree']:
         src = os.path.join('file://', hub.OPT['idem']['tree'])
@@ -53,18 +68,17 @@ def cli(hub):
                 sls_sources = [src]
             else:
                 sls_sources.append(src)
-    hub.pop.loop.start(
-            hub.idem.init.apply(
-                'cli',
-                sls_sources,
-                hub.OPT['idem']['render'],
-                hub.OPT['idem']['runtime'],
-                ['states'],
-                hub.OPT['idem']['cache_dir'],
-                hub.OPT['idem']['sls'],
-                hub.OPT['idem']['test'],
-                )
-            )
+    await hub.idem.init.apply(
+        'cli',
+        sls_sources,
+        hub.OPT['idem']['render'],
+        hub.OPT['idem']['runtime'],
+        ['states'],
+        hub.OPT['idem']['cache_dir'],
+        hub.OPT['idem']['sls'],
+        hub.OPT['idem']['test'],
+        )
+
     errors = hub.idem.RUNS['cli']['errors']
     if errors:
         display = getattr(hub, 'output.nested.display')(errors)
