@@ -1,0 +1,9 @@
+==========================
+Idem 5 - Encrypted Secrets
+==========================
+
+Idem 5 comes with a much needed addition, the ability to store encrypted data at
+rest. This addition introduces a new dep and project that is used for the work
+of encrypted datastore - Takara. Takara is the standalone manager for keeping
+track of this data at rest, it allows for data to be easily stored in a pluggable
+and dynamic way. Takara has also been app-merged into Idem.

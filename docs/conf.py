@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'idem'
-copyright = '2019, Thomas S Hatch'
+copyright = '2020, Thomas S Hatch'
 author = 'Thomas S Hatch'
 
 # The short X.Y version
-version = '4'
+version = '5'
 # The full version, including alpha/beta/rc tags
-release = '4'
+release = '5'
 
 
 # -- General configuration ---------------------------------------------------
