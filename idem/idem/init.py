@@ -54,13 +54,12 @@ async def cli_apply(hub):
     '''
     Run the CLI routine in a loop
     '''
-    if hub.OPT['idem']['takara_unit']:
-        tkw = copy.copy(hub.OPT['takara'])
-        tkw['unit'] = hub.OPT['idem']['takara_unit']
-        tkw['seal_raw'] = hub.OPT['idem']['seal_raw']
-        await hub.takara.init.setup(**tkw)
-        await hub.takara.init.unseal(**tkw)
     sls_sources = hub.OPT['idem']['sls_sources']
+    if hub.OPT['idem']['takara_unit']:
+        hub.idem.init.init_takara(
+                hub.OPT['idem']['takara_unit'],
+                hub.OPT['idem']['seal_raw'],
+                **hub.OPT['takara'])
     if hub.OPT['idem']['tree']:
         src = os.path.join('file://', hub.OPT['idem']['tree'])
         if len(sls_sources) == 1:
@@ -88,6 +87,16 @@ async def cli_apply(hub):
     output = hub.OPT['idem']['output']
     display = getattr(hub, f'output.{output}.display')(running)
     print(display)
+
+
+async def init_takara(hub, unit, seal_raw, **tkw):
+    '''
+    Setup and unseal a connection to takara
+    '''
+    tkw['unit'] = unit
+    tkw['seal_raw'] = seal_raw
+    await hub.takara.init.setup(**tkw)
+    await hub.takara.init.unseal(**tkw)
 
 
 def create(hub, name, sls_sources, render, runtime, subs, cache_dir, test):

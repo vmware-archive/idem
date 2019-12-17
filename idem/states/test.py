@@ -58,6 +58,16 @@ def nop(hub, ctx, name, **kwargs):
     return succeed_without_changes(hub, ctx, name)
 
 
+def succeed_with_comment(hub, ctx, name, comment, **kwargs):
+    ret = {
+        'name': name,
+        'changes': {},
+        'result': True,
+        'comment': comment,
+    }
+    return ret
+
+
 def succeed_without_changes(hub, ctx, name, **kwargs):
     '''
     name
