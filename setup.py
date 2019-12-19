@@ -8,7 +8,6 @@ import shutil
 from setuptools import setup, Command
 
 NAME = 'idem'
-PYPI_NAME = 'idemlang'
 DESC = ('Transform configuration into idempotent action.')
 
 with open('README.rst', encoding='utf-8') as f:
@@ -53,10 +52,10 @@ def discover_packages():
     return modules
 
 
-setup(name=PYPI_NAME,
-      author='',
-      author_email='',
-      url='',
+setup(name=NAME,
+      author='Thomas S Hatch',
+      author_email='thatch45@gmail.com',
+      url='https://idem.readthedocs.io',
       version=VERSION,
       description=DESC,
       install_requires=REQUIREMENTS,
