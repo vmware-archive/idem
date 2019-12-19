@@ -7,7 +7,7 @@ idem and the idem Azure providers are installed:
 
 .. code-block:: bash
 
-    pip install idemlang
+    pip install idem
 
 This command will install idem from pypi as well as the azure cloud provider.
 With these in place start by making a new directory to place your Idem code
