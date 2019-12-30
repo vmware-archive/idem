@@ -1,0 +1,13 @@
+========
+Idem 5.1
+========
+
+This is a bugfix release of Idem. This release fixes a few issues found inside
+the state runtime.
+
+For details on the repaired issues please see the following issues on Github:
+
+#11
+#12
+#13
+#14
