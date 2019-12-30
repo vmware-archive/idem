@@ -7,7 +7,7 @@ import pop.hub
 import idem.conf
 
 
-def run_sls(sls, runtime='parallel'):
+def run_sls(sls, runtime='parallel', test=False):
     '''
     Pass in an sls list and run it!
     '''
@@ -22,7 +22,7 @@ def run_sls(sls, runtime='parallel'):
     cache_dir = tempfile.mkdtemp()
     sls_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sls')
     sls_sources = [f'file://{sls_dir}']
-    hub.pop.loop.start(hub.idem.init.apply(name, sls_sources, render, runtime, ['states', 'nest'], cache_dir, sls))
+    hub.pop.loop.start(hub.idem.init.apply(name, sls_sources, render, runtime, ['states', 'nest'], cache_dir, sls, test))
     errors = hub.idem.RUNS[name]['errors']
     if errors:
         return errors
@@ -87,6 +87,18 @@ def test_req():
     assert ret['test_|-needs_fail_|-needs_fail_|-nop']['__run_num'] == 4
     assert ret['test_|-needs_|-needs_|-nop']['__run_num'] == 3
     assert ret['test_|-needs_|-needs_|-nop']['result'] == True
+
+
+def test_req_test_mode():
+    '''
+    Test basic requisites in test mode
+    '''
+    ret = run_sls(['req'], test=True)
+    assert ret['test_|-needs_fail_|-needs_fail_|-nop']['result'] == False
+    assert ret['test_|-needs_fail_|-needs_fail_|-nop']['__run_num'] == 4
+    assert ret['test_|-needs_|-needs_|-nop']['__run_num'] == 3
+    # "needed" returned None and needs did not fail to run
+    assert ret['test_|-needs_|-needs_|-nop']['result'] == None
 
 
 def test_watch():

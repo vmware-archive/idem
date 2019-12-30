@@ -4,5 +4,5 @@ def define(hub):
     given requisite
     '''
     return {
-        'result': True,
+        'result': [True, None],
         }

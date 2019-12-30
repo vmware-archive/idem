@@ -55,6 +55,8 @@ def nop(hub, ctx, name, **kwargs):
     requisite, or in templates which could otherwise be empty due to jinja
     rendering
     '''
+    if ctx['test']:
+        return none_without_changes(hub, ctx, name)
     return succeed_without_changes(hub, ctx, name)
 
 
@@ -77,6 +79,20 @@ def succeed_without_changes(hub, ctx, name, **kwargs):
         'name': name,
         'changes': {},
         'result': True,
+        'comment': 'Success!'
+    }
+    return ret
+
+
+def none_without_changes(hub, ctx, name, **kwargs):
+    '''
+    name
+        A unique string.
+    '''
+    ret = {
+        'name': name,
+        'changes': {},
+        'result': None,
         'comment': 'Success!'
     }
     return ret

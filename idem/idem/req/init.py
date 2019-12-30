@@ -4,7 +4,7 @@ def seq(hub, low, running):
     The sequence needs to identify:
     1. recursive requisites
     2. what chunks are free to run
-    3. Bahavior augments for the next chunk to run
+    3. Behavior augments for the next chunk to run
     '''
     ret = {}
     for ind, chunk in enumerate(low):
