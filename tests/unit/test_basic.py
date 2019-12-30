@@ -2,9 +2,13 @@
 import os
 import tempfile
 
-# Import rosso libs
+# Import pop libs
 import pop.hub
 import idem.conf
+import rend.exc
+
+# Import third party libs
+import pytest
 
 
 def run_sls(sls, runtime='parallel', test=False):
@@ -153,3 +157,8 @@ def test_params():
 def test_blocks():
     ret = run_sls(['blocks'])
     assert 'test_|-wow_|-wow_|-nop' in ret
+
+
+def test_dup_keys():
+    with pytest.raises(rend.exc.RenderException):
+        ret = run_sls(['dupkeys'])
