@@ -45,6 +45,16 @@ def test_shebang():
     assert 'test_|-test_|-test_|-nop' in ret
 
 
+def test_req_chain():
+    '''
+    Test that you can chain requisites, bug #11
+    '''
+    ret = run_sls(['recreq'])
+    assert ret.get('test_|-first thing_|-first thing_|-nop', {}).get('__run_num') == 1
+    assert ret.get('test_|-second thing_|-second thing_|-nop', {}).get('__run_num') == 2
+    assert ret.get('test_|-third thing_|-third thing_|-nop', {}).get('__run_num') == 3
+
+
 def test_nest():
     ret = run_sls(['nest'])
     assert ret['nest.again.another.test_|-baz_|-baz_|-nop']['result']

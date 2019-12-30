@@ -10,7 +10,7 @@ async def start(hub, name):
     low = hub.idem.RUNS[name].get('low')
     ref = f'idem.run.{rtime}.runtime'
     old_seq = {}
-    old_low_len = -1
+    old_seq_len = -1
     while True:
         # TODO: make the errors float up
         seq = hub.idem.req.init.seq(low, hub.idem.RUNS[name]['running'])
@@ -22,9 +22,9 @@ async def start(hub, name):
         low = hub.idem.RUNS[name].get('low')
         if len(low) <= len(hub.idem.RUNS[name]['running']):
             break
-        if len(low) == old_low_len:
+        if len(seq) == old_seq_len:
             # We made no progress! Recursive requisite!
             raise Exception()
         old_seq = seq
-        old_low_len = len(low)
+        old_seq_len = len(seq)
         # Check for any new, available blocks to render
