@@ -4,3 +4,4 @@ jinja2
 pop>=7.5
 rend>=4
 toml
+takara
