@@ -186,3 +186,60 @@ def mod_watch(hub, ctx, name, **kwargs):
         'comment': 'Watch ran!'
     }
     return ret
+
+
+def configurable_test_state(hub, ctx, name, changes=True, result=True, comment='', **kwargs):
+    '''
+    A configurable test state which determines its output based on the inputs.
+
+    name:
+        A unique string.
+    changes:
+        Do we return anything in the changes field?
+        Accepts True, False, and 'Random'
+        Default is True
+    result:
+        Do we return successfully or not?
+        Accepts True, False, and 'Random'
+        Default is True
+        If test is True and changes is True, this will be None.  If test is
+        True and and changes is False, this will be True.
+    comment:
+        String to fill the comment field with.
+        Default is ''
+    '''
+    ret = {
+        'name': name,
+        'changes': {},
+        'result': False,
+        'comment': comment
+    }
+
+    change_data = {
+        'testing': {
+            'old': 'Unchanged',
+            'new': 'Something pretended to change'
+        }
+    }
+
+    # If changes is True, then we place our dummy change dictionary into it
+    if changes == 'Random':
+        if random.choice([True, False]):
+            ret['changes'] = change_data
+    elif changes is True:
+        ret['changes'] = change_data
+    elif changes is False:
+        ret['changes'] = {}
+
+    if result == 'Random':
+        ret['result'] = random.choice([True, False])
+    elif result is True:
+        ret['result'] = True
+    elif result is False:
+        ret['result'] = False
+
+    if ctx['test']:
+        ret['result'] = True if changes is False else None
+        ret['comment'] = 'This is a test' if not comment else comment
+
+    return ret
