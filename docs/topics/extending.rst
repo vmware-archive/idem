@@ -26,51 +26,26 @@ Start by installing `idem`:
 
     pip install idem
 
-This will download and install both `idem` and `pop`. Now start your project:
+This will download and install both `idem` and `pop`. Now you can start your
+project by calling `pop-seed` to make the structure you need:
 
 .. code-block:: bash
 
-    mkdir stuff
-    cd stuff
-    pop-seed stuff
+    pop-seed idem_tester -t v -d exec states
 
-We just started the `stuff` project! That last line is critical, as you may have
-noticed that it created a bunch of files and directories for you. This
-is your first `POP` project! The `pop-seed` command has made everything you
-need to get started, a nice `setup.py` file, as well as the structure used
-by `POP` projects.
+By passing `-t v` to `pop-seed` we are telling `pop-seed` that this is a
+*Vertical App Merge* project. By passing `-d exec states` we are asking
+`pop-seed` to add the 2 dynamic names `exec` and `states` to the project.
 
-Next open up the `conf.py` file found in the newly created `stuff` directory.
-This file contains the configuration that can be loaded into a `pop` project.
-We want to start by telling `pop` that this project will be extending two plugin
-subsystem in `idem`, they are called `states` and `exec`:
+This will create a new project called `idem_tester` with everything you need
+to get the ball rolling.
 
-.. code-block:: python
-
-    DYNE = {
-        'states': ['states'],
-        'exec': ['exec'],
-        }
-
-This tells `pop` to extend the plugin systems in `idem` called `states` and
-`exec`.
-
-Now you can add these two plugin types to `idem` by just making the directories
-inside the new python package called `stuff`:
-
-.. code-block:: bash
-
-    cd stuff
-    mkdir exec
-    mkdir states
-
-Now, `exec` is where to put the plugins that do the work and `states` is where
-you put the plugins that enforce idempotent state.
 
 Making Your First Idem State
 ============================
 
-Make a new file under `states` called `trial.py`:
+In your new project there will be a directory called `idem_tester/states`, in
+this directory add a file called `trial.py`:
 
 .. code-block:: python
 
